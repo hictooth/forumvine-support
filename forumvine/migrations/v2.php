@@ -7,13 +7,13 @@
 *
 */
 
-namespace rmcgirr83\topicdescription\migrations;
+namespace hictooth\forumvine\migrations;
 
 class v2 extends \phpbb\db\migration\migration
 {
 	static public function depends_on()
 	{
-		return array('\rmcgirr83\topicdescription\migrations\v1');
+		return array('\hictooth\forumvine\migrations\v1');
 	}
 
 	public function update_schema()

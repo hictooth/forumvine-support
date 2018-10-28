@@ -7,7 +7,7 @@
 *
 */
 
-namespace rmcgirr83\topicdescription\migrations;
+namespace hictooth\forumvine\migrations;
 
 class v1 extends \phpbb\db\migration\migration
 {

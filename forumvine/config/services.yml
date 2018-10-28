@@ -1,6 +1,6 @@
 services:
-    rmcgirr83.topicdescription.listener:
-        class: rmcgirr83\topicdescription\event\listener
+    hictooth.forumvine.listener:
+        class: hictooth\forumvine\event\listener
         arguments:
             - '@auth'
             - '@request'

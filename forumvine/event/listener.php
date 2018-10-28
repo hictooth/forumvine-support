@@ -8,7 +8,7 @@
 *
 */
 
-namespace rmcgirr83\topicdescription\event;
+namespace hictooth\forumvine\event;
 
 /**
 * @ignore
@@ -103,7 +103,7 @@ class listener implements EventSubscriberInterface
 		$post_data['topic_desc'] = (!empty($post_data['topic_desc'])) ? $post_data['topic_desc'] : '';
 		if ($this->auth->acl_get('f_topic_desc', $event['forum_id']) && ($mode == 'post' || ($mode == 'edit' && $post_data['topic_first_post_id'] == $post_data['post_id'])))
 		{
-			$this->user->add_lang_ext('rmcgirr83/topicdescription', 'common');
+			$this->user->add_lang_ext('hictooth/forumvine', 'common');
 			$page_data['TOPIC_DESC'] = $this->request->variable('topic_desc', $post_data['topic_desc'], true);
 			$page_data['S_DESC_TOPIC'] = true;
 		}
