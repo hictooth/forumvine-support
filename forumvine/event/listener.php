@@ -151,6 +151,9 @@ class listener implements EventSubscriberInterface
 	{
 		$topic_data = $event['topic_data'];
 		$this->template->assign_var('TOPIC_DESC',censor_text($topic_data['topic_desc']));
+
+		// do views as well
+		$this->template->assign_var('TOPIC_VIEWS',censor_text($topic_data['topic_views']));
 	}
 
 	public function modify_topicrow($event)
