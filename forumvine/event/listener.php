@@ -170,12 +170,30 @@ class listener implements EventSubscriberInterface
 	public function search_modify_tpl_ary($event)
 	{
 		$row = $event['row'];
-		if ($event['show_results'] == 'topics' && !empty($row['topic_desc']))
-		{
-			$tpl_array = $event['tpl_ary'];
-			$tpl_array['TOPIC_DESC'] = censor_text($row['topic_desc']);
-			$event['tpl_ary'] = $tpl_array;
-		}
+		$tpl_array = $event['tpl_ary'];
+
+		// add in last post author
+		// query: SELECT post_id, poster_id FROM phpbb_posts WHERE topic_id=11694481 ORDER BY post_time DESC LIMIT 1;
+		global $db;
+		global $phpbb_container;
+		global $user;
+		$sql = "SELECT poster_id, post_time FROM " . POSTS_TABLE . " WHERE topic_id = " . $db->sql_escape($row['topic_id']) . " ORDER BY post_time DESC LIMIT 1";
+		$result = $db->sql_query($sql);
+		$post_row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		$sql = "SELECT username FROM " . USERS_TABLE . " WHERE user_id = " . $db->sql_escape($post_row['poster_id']);
+		$result = $db->sql_query($sql);
+		$user_row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+		$tpl_array['LAST_POSTER_NAME'] = $user_row['username'];
+		$tpl_array['LAST_POSTER_TIME'] = (!empty($post_row['post_time'])) ? $user->format_date($post_row['post_time']) : '';
+
+		// add in description
+		$tpl_array['TOPIC_DESC'] = censor_text($row['topic_desc']);
+
+		// update tpl_array in returned values
+		$event['tpl_ary'] = $tpl_array;
 	}
 
 	public function cache_user_data($event) {
