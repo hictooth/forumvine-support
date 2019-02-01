@@ -100,12 +100,26 @@ class listener implements EventSubscriberInterface
 		$mode = $event['mode'];
 		$post_data = $event['post_data'];
 		$page_data = $event['page_data'];
+
+		// add in topic description
 		$post_data['topic_desc'] = (!empty($post_data['topic_desc'])) ? $post_data['topic_desc'] : '';
 		if ($this->auth->acl_get('f_topic_desc', $event['forum_id']) && ($mode == 'post' || ($mode == 'edit' && $post_data['topic_first_post_id'] == $post_data['post_id'])))
 		{
 			$this->user->add_lang_ext('hictooth/forumvine', 'common');
 			$page_data['TOPIC_DESC'] = $this->request->variable('topic_desc', $post_data['topic_desc'], true);
 			$page_data['S_DESC_TOPIC'] = true;
+		}
+
+		// add in whether this is the first post of a topic (and therefore we can change the title)
+		global $db, $user;
+		$post_id = $event['post_id'];
+		$topic_id = $event['topic_id'];
+		$sql = "SELECT topic_first_post_id FROM " . TOPICS_TABLE . " WHERE topic_id = " . $db->sql_escape($topic_id);
+		$result = $db->sql_query($sql);
+		$topic_row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+		if ($topic_row['topic_first_post_id'] == $post_id) {
+			$page_data['IS_FIRST_POST'] = true;
 		}
 
 		$event['page_data']	= $page_data;
