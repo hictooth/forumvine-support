@@ -173,21 +173,16 @@ class listener implements EventSubscriberInterface
 		$tpl_array = $event['tpl_ary'];
 
 		// add in last post author
-		// query: SELECT post_id, poster_id FROM phpbb_posts WHERE topic_id=11694481 ORDER BY post_time DESC LIMIT 1;
 		global $db;
-		global $phpbb_container;
 		global $user;
-		$sql = "SELECT poster_id, post_time FROM " . POSTS_TABLE . " WHERE topic_id = " . $db->sql_escape($row['topic_id']) . " ORDER BY post_time DESC LIMIT 1";
+		$sql = "SELECT * FROM " . TOPICS_TABLE . " WHERE topic_id = " . $db->sql_escape($row['topic_id']);
 		$result = $db->sql_query($sql);
-		$post_row = $db->sql_fetchrow($result);
+		$topic_row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
-
-		$sql = "SELECT username FROM " . USERS_TABLE . " WHERE user_id = " . $db->sql_escape($post_row['poster_id']);
-		$result = $db->sql_query($sql);
-		$user_row = $db->sql_fetchrow($result);
-		$db->sql_freeresult($result);
-		$tpl_array['LAST_POSTER_NAME'] = $user_row['username'];
-		$tpl_array['LAST_POSTER_TIME'] = (!empty($post_row['post_time'])) ? $user->format_date($post_row['post_time']) : '';
+		$last_poster_string = get_username_string('full', $topic_row['topic_last_poster_id'], $topic_row['topic_last_poster_name'], $topic_row['topic_last_poster_colour']);
+		$last_post_time = $user->format_date($topic_row['topic_last_post_time']);
+		$tpl_array['LAST_POSTER_NAME'] = $last_poster_string;
+		$tpl_array['LAST_POSTER_TIME'] = $last_post_time;
 
 		// add in description
 		$tpl_array['TOPIC_DESC'] = censor_text($row['topic_desc']);
@@ -198,7 +193,6 @@ class listener implements EventSubscriberInterface
 
 	public function cache_user_data($event) {
 		global $db;
-		global $phpbb_container;
 
 		// get the user number
 		$row_data = $event['row'];
