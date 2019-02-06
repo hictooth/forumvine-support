@@ -122,6 +122,25 @@ class listener implements EventSubscriberInterface
 			$page_data['IS_FIRST_POST'] = true;
 		}
 
+		// add in the last post so the user can see what was just said
+		$sql = "SELECT * FROM " . POSTS_TABLE . " WHERE topic_id = " . $db->sql_escape($topic_id) . " ORDER BY post_time DESC LIMIT 1";
+		$result = $db->sql_query($sql);
+		$posts_row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+		if ($posts_row) {
+			$parse_flags = ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
+			$message = generate_text_for_display($posts_row['post_text'], $posts_row['bbcode_uid'], $posts_row['bbcode_bitfield'], $parse_flags, true);
+			$sql = "SELECT * FROM " . TOPICS_TABLE . " WHERE topic_id = " . $db->sql_escape($topic_id);
+			$result = $db->sql_query($sql);
+			$topic_row = $db->sql_fetchrow($result);
+			$db->sql_freeresult($result);
+			$last_poster_string = get_username_string('full', $topic_row['topic_last_poster_id'], $topic_row['topic_last_poster_name'], $topic_row['topic_last_poster_colour']);
+			$last_post_time = $user->format_date($topic_row['topic_last_post_time']);
+			$page_data['LAST_POSTER_NAME'] = $last_poster_string;
+			$page_data['LAST_POSTER_TIME'] = $last_post_time;
+			$page_data['LAST_POSTER_MESSAGE'] = $message;
+		}
+
 		$event['page_data']	= $page_data;
 	}
 
