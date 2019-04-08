@@ -187,6 +187,26 @@ class listener implements EventSubscriberInterface
 
 		// do views as well
 		$this->template->assign_var('TOPIC_VIEWS',censor_text($topic_data['topic_views']));
+
+		// do whether the page should display an egg, and if so which one
+		global $db;
+		global $user;
+		$sql = "SELECT * FROM phpbb_eggs WHERE topic_id = " . $db->sql_escape($topic_data['topic_id']);
+		$result = $db->sql_query($sql);
+		$egg_row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+		if ($egg_row) {
+			$this->template->assign_var('EGG_FILENAME', $egg_row['filename']);
+
+			// has this user found the egg already before?
+			$sql = "SELECT * FROM phpbb_eggs_found WHERE egg_id = " . $db->sql_escape($egg_row['id']) . " AND user_id = " . $db->sql_escape($user->data['user_id']);
+			$result = $db->sql_query($sql);
+			$eggs_found_row = $db->sql_fetchrow($result);
+			$db->sql_freeresult($result);
+			if ($eggs_found_row) {
+				$this->template->assign_var('FOUND_EGG', 1);
+			}
+		}
 	}
 
 	public function modify_topicrow($event)
@@ -233,7 +253,6 @@ class listener implements EventSubscriberInterface
 
 		// get the binary badges
 		$badges_binary = $row_data['badges_binary'];
-		error_log('badges binary 1: ' . $badges_binary);
 
 		// get the group name of this user
 		$group_name = getGroupName($row_data['group_id']);
