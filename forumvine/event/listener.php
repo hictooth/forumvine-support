@@ -231,6 +231,10 @@ class listener implements EventSubscriberInterface
 		$row_data = $event['row'];
 		$user_number = $row_data['user_number'];
 
+		// get the binary badges
+		$badges_binary = $row_data['badges_binary'];
+		error_log('badges binary 1: ' . $badges_binary);
+
 		// get the group name of this user
 		$group_name = getGroupName($row_data['group_id']);
 
@@ -238,6 +242,7 @@ class listener implements EventSubscriberInterface
 		$event['user_cache_data'] = array_merge($event['user_cache_data'], array(
 			'number' => $user_number,
 			'group_name' => $group_name,
+			'badges_binary' => $badges_binary,
 		));
 	}
 
@@ -250,6 +255,7 @@ class listener implements EventSubscriberInterface
 		$event['post_row'] = array_merge($event['post_row'], array(
 			'POSTER_NUMBER' => $user_poster_data['number'],
 			'GROUP_NAME' => $user_poster_data['group_name'],
+			'POSTER_BADGES_BINARY' => $user_poster_data['badges_binary']
 		));
 
 		// add in title, if applicable

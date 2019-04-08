@@ -28,6 +28,7 @@ class v2 extends \phpbb\db\migration\migration
 					'import_status'	=> array('UINT', 0),
 					'tt_username'	=> array('TEXT_UNI', null),
 					'tt_password'	=> array('TEXT_UNI', null),
+					'badges_binary'	=> array('UINT', 0),
 				),
 			),
 		);
@@ -45,6 +46,7 @@ class v2 extends \phpbb\db\migration\migration
 					'import_status',
 					'tt_username',
 					'tt_password',
+					'badges_binary'
 				),
 			),
 		);
