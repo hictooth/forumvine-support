@@ -2,7 +2,7 @@
     "name": "hictooth/forumvine",
     "type": "phpbb-extension",
     "description": "Adds support for various Forumvine specific features, including topic descriptions, group names, user numbers, member titles and birthdays. Based on rmcgirr83's topicdescription extension.",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "time": "2018-02-19",
     "license": "GPL-2.0",
     "authors": [

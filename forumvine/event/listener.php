@@ -328,6 +328,7 @@ class listener implements EventSubscriberInterface
 			array_push($custom, $custom_field);
 		}
 
+		$custom = array_merge($event['profile_fields']['blockrow'], $custom);
 		$event['profile_fields'] = array_merge($event['profile_fields'], array('blockrow' => $custom));
 	}
 }
